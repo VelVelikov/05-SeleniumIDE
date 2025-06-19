@@ -18,13 +18,13 @@ pipeline {
 
         stage('Build the project') {
             steps {
-                bat 'dotnet build --configuration Release'
+                sh 'dotnet build --configuration Release'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'dotnet test --no-build --configuration Release --logger "trx;LogFileName=test_results.trx" --results-directory TestResults'
+                sh 'dotnet test --no-build  --logger "trx;LogFileName=test_results.trx" --results-directory TestResults'
             }
         }
 
