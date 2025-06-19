@@ -39,7 +39,7 @@ pipeline {
     post {
         always {
             // Archive the raw .trx test result for inspection
-            junit 'TestResults/*.trx'
+            archiveArtifacts artifacts: 'TestResults/*.trx', fingerprint: true
 
             // Optional: If you install and use trx2junit, convert to XML and use:
             // junit 'TestResults/*.xml'
