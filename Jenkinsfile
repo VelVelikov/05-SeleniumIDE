@@ -18,23 +18,33 @@ pipeline {
 
         stage('Build the project') {
             steps {
-                sh 'dotnet build'
+                bat 'dotnet build --configuration Release'
             }
         }
 
-        stage('Run tests') {
+        stage('Test') {
             steps {
-                sh 'dotnet test'
+                sh 'dotnet test --no-build --configuration Release --logger "trx;LogFileName=test_results.trx" --results-directory TestResults'
+            }
+        }
+
+        stage('Publish Artifacts') {
+            steps {
+                sh 'dotnet publish SeleniumIDE/SeleniumIde.csproj -c Release -o publish'
+                archiveArtifacts artifacts: 'publish/**', fingerprint: true
             }
         }
     }
 
     post {
-        success {
-            echo 'Build and test succeeded!'
-        }
-        failure {
-            echo 'Build or test failed.'
+        always {
+            // Archive the raw .trx test result for inspection
+            junit 'TestResults/*.trx'
+
+            // Optional: If you install and use trx2junit, convert to XML and use:
+            // junit 'TestResults/*.xml'
+
+            cleanWs()
         }
     }
 }
