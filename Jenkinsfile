@@ -3,13 +3,17 @@ pipeline {
 
     stages {
         stage('Checkout code') {
+            steps {
             //Checkout code from Github and specify branch
             git branch: 'main', url: 'https://github.com/VelVelikov/05-SeleniumIDE'
+            }
         }
 
         stage('Build and test'){
-            sh 'dotnet build'
-            sh 'dotnet test'
+            steps{
+                sh 'dotnet build'
+                sh 'dotnet test'
+            }
         }
     }
 
